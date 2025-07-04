@@ -1,3 +1,4 @@
+const {check,validationResult} = require('express-validator');
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -36,7 +37,7 @@ const SignUp = async(req,res,next) =>{
     }catch(error){
         return res.status(500).json({message : error.message});
     }
-}
+};
 
 const Login = async(req,res,next) =>{
     try{
