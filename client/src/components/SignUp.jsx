@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import './css/signup.css';
 import { useNavigate } from "react-router-dom";
 import { signupUser } from "../store/signUp";
+import styles from "./css/signup.module.css";
 
 const SignUp = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -17,11 +18,8 @@ const SignUp = () => {
         confirmPassword: '',
     });
 
-    // Get error from Redux state
-    const { loading, error, message } = useSelector(state => state.signup);
+    const { loading, error } = useSelector(state => state.signup);
     const [showError, setShowError] = useState(false);
-
-    // Local state to manage field-specific errors
     const [fieldErrors, setFieldErrors] = useState({});
 
     useEffect(() => {
@@ -55,7 +53,7 @@ const SignUp = () => {
         if (!formData.confirmPassword) {
             errors.confirmPassword = "Confirm your password";
         } else if (formData.password !== formData.confirmPassword) {
-            errors.confirmPassword = "Password and Confirm password do not match";
+            errors.confirmPassword = "Passwords do not match";
         }
         return errors;
     };
@@ -64,36 +62,35 @@ const SignUp = () => {
         e.preventDefault();
         const errors = validate();
         setFieldErrors(errors);
-        
+
         if (Object.keys(errors).length > 0) {
-            // Don't call the API if there are validation errors
             return;
         }
 
         const resultAction = await dispatch(signupUser(formData));
         if (signupUser.fulfilled.match(resultAction)) {
-                navigate('/Login');
+            navigate('/Login');
         }
     };
 
     return (
-        <div className="container">
-            <div className="bg-animation">
-                <div className="bg-circle bg-circle-1"></div>
-                <div className="bg-circle bg-circle-2"></div>
-                <div className="bg-circle bg-circle-3"></div>
+        <div className={styles.container}>
+            <div className={styles["bg-animation"]}>
+                <div className={`${styles["bg-circle"]} ${styles["bg-circle-1"]}`}></div>
+                <div className={`${styles["bg-circle"]} ${styles["bg-circle-2"]}`}></div>
+                <div className={`${styles["bg-circle"]} ${styles["bg-circle-3"]}`}></div>
             </div>
 
-            <div className="signup-card">
-                <div className="header">
-                    <div className="icon-group">
-                        <div className="icon-box icon-brain">
+            <div className={styles["signup-card"]}>
+                <div className={styles.header}>
+                    <div className={styles["icon-group"]}>
+                        <div className={`${styles["icon-box"]} ${styles["icon-brain"]}`}>
                             <i className="fas fa-brain"></i>
                         </div>
-                        <div className="icon-box icon-camera">
+                        <div className={`${styles["icon-box"]} ${styles["icon-camera"]}`}>
                             <i className="fas fa-camera"></i>
                         </div>
-                        <div className="icon-box icon-shield">
+                        <div className={`${styles["icon-box"]} ${styles["icon-shield"]}`}>
                             <i className="fas fa-shield-alt"></i>
                         </div>
                     </div>
@@ -101,162 +98,147 @@ const SignUp = () => {
                     <p>Advanced Image Analysis & Spam Detection Platform</p>
                 </div>
 
-                {/* Show API error here */}
                 {error && showError && (
-                    <div className="api-error-message">
+                    <div className={styles["api-error-message"]}>
                         <i className="fas fa-exclamation-circle"></i>
                         <span>{error}</span>
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="form-container">
-                    <div className="input-group">
-                        <div className="input-container">
-                            <i className="fas fa-user input-icon"></i>
+                <form onSubmit={handleSubmit} className={styles["form-container"]}>
+                    {/* Username */}
+                    <div className={styles["input-group"]}>
+                        <div className={styles["input-container"]}>
+                            <i className={`fas fa-user ${styles["input-icon"]}`}></i>
                             <input
                                 type="text"
                                 id="username"
                                 name="username"
-                                placeholder="username"
-                                className={`form-input${fieldErrors.username ? ' error' : ''}`}
+                                placeholder="Username"
+                                className={`${styles["form-input"]} ${fieldErrors.username ? styles.error : ""}`}
                                 value={formData.username}
                                 onChange={handleChange}
                             />
                         </div>
-                        {/* Fixed: Only show error if it exists */}
                         {fieldErrors.username && (
-                            <div className="error-message show" id="fullNameError">
+                            <div className={`${styles["error-message"]} ${styles.show}`}>
                                 <i className="fas fa-exclamation-triangle"></i>
-                                <span className="error-text">{fieldErrors.username}</span>
+                                <span className={styles["error-text"]}>{fieldErrors.username}</span>
                             </div>
                         )}
                     </div>
 
-                    <div className="input-group">
-                        <div className="input-container">
-                            <i className="fas fa-envelope input-icon"></i>
+                    {/* Email */}
+                    <div className={styles["input-group"]}>
+                        <div className={styles["input-container"]}>
+                            <i className={`fas fa-envelope ${styles["input-icon"]}`}></i>
                             <input
                                 type="email"
                                 id="email"
                                 name="email"
                                 placeholder="Email Address"
-                                className={`form-input${fieldErrors.email ? ' error' : ''}`}
+                                className={`${styles["form-input"]} ${fieldErrors.email ? styles.error : ""}`}
                                 value={formData.email}
                                 onChange={handleChange}
                             />
                         </div>
-                        {/* Fixed: Only show error if it exists */}
                         {fieldErrors.email && (
-                            <div className="error-message show" id="emailError">
+                            <div className={`${styles["error-message"]} ${styles.show}`}>
                                 <i className="fas fa-exclamation-triangle"></i>
-                                <span className="error-text">{fieldErrors.email}</span>
+                                <span className={styles["error-text"]}>{fieldErrors.email}</span>
                             </div>
                         )}
                     </div>
 
-                    <div className="input-group">
-                        <div className="input-container">
-                            <i className="fas fa-lock input-icon"></i>
+                    {/* Password */}
+                    <div className={styles["input-group"]}>
+                        <div className={styles["input-container"]}>
+                            <i className={`fas fa-lock ${styles["input-icon"]}`}></i>
                             <input
                                 type={showPassword ? "text" : "password"}
                                 id="password"
                                 name="password"
                                 placeholder="Password"
-                                className={`form-input${fieldErrors.password ? ' error' : ''}`}
-                                onChange={handleChange}
+                                className={`${styles["form-input"]} ${fieldErrors.password ? styles.error : ""}`}
                                 value={formData.password}
+                                onChange={handleChange}
                             />
                             <button
                                 type="button"
-                                className="password-toggle"
-                                id="passwordToggle"
-                                onClick={() => setShowPassword((prev) => !prev)}
+                                className={styles["password-toggle"]}
+                                onClick={() => setShowPassword(prev => !prev)}
                             >
-                                <i
-                                    className={`fas ${
-                                        showPassword ? "fa-eye-slash" : "fa-eye"
-                                    }`}
-                                ></i>
+                                <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
                             </button>
                         </div>
-                        {/* Fixed: Only show error if it exists */}
                         {fieldErrors.password && (
-                            <div className="error-message show" id="passwordError">
+                            <div className={`${styles["error-message"]} ${styles.show}`}>
                                 <i className="fas fa-exclamation-triangle"></i>
-                                <span className="error-text">{fieldErrors.password}</span>
+                                <span className={styles["error-text"]}>{fieldErrors.password}</span>
                             </div>
                         )}
                     </div>
 
-                    <div className="input-group">
-                        <div className="input-container">
-                            <i className="fas fa-lock input-icon"></i>
+                    {/* Confirm Password */}
+                    <div className={styles["input-group"]}>
+                        <div className={styles["input-container"]}>
+                            <i className={`fas fa-lock ${styles["input-icon"]}`}></i>
                             <input
                                 type={showConfirmPassword ? "text" : "password"}
                                 id="confirmPassword"
                                 name="confirmPassword"
                                 placeholder="Confirm Password"
-                                className={`form-input${fieldErrors.confirmPassword ? ' error' : ''}`}
-                                onChange={handleChange}
+                                className={`${styles["form-input"]} ${fieldErrors.confirmPassword ? styles.error : ""}`}
                                 value={formData.confirmPassword}
+                                onChange={handleChange}
                             />
                             <button
                                 type="button"
-                                className="password-toggle"
-                                id="confirmPasswordToggle"
-                                onClick={() =>
-                                    setShowConfirmPassword((prev) => !prev)
-                                }
+                                className={styles["password-toggle"]}
+                                onClick={() => setShowConfirmPassword(prev => !prev)}
                             >
-                                <i
-                                    className={`fas ${
-                                        showConfirmPassword ? "fa-eye-slash" : "fa-eye"
-                                    }`}
-                                ></i>
+                                <i className={`fas ${showConfirmPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
                             </button>
                         </div>
-                        {/* Fixed: Only show error if it exists */}
                         {fieldErrors.confirmPassword && (
-                            <div className="error-message show" id="confirmPasswordError">
+                            <div className={`${styles["error-message"]} ${styles.show}`}>
                                 <i className="fas fa-exclamation-triangle"></i>
-                                <span className="error-text">{fieldErrors.confirmPassword}</span>
+                                <span className={styles["error-text"]}>{fieldErrors.confirmPassword}</span>
                             </div>
                         )}
-                        {/* Debug: Show what's in fieldErrors
-                        {Object.keys(fieldErrors).length > 0 && (
-                            <div style={{color: 'blue', fontSize: '12px', marginTop: '5px'}}>
-                                Debug: {JSON.stringify(fieldErrors)}
-                            </div>
-                        )} */}
                     </div>
 
-                    <button type="submit" className="submit-btn" id="submitBtn" disabled={loading}>
+                    <button
+                        type="submit"
+                        className={`${styles["submit-btn"]} ${loading ? styles.loading : ""}`}
+                        disabled={loading}
+                    >
                         {loading ? (
-                            <div className="loading-spinner">
-                                <div className="spinner"></div>
+                            <div className={styles["loading-spinner"]}>
+                                <div className={styles.spinner}></div>
                                 <span>Creating Account...</span>
                             </div>
                         ) : (
-                            <span className="btn-text">Create Account</span>
+                            <span className={styles["btn-text"]}>Create Account</span>
                         )}
                     </button>
                 </form>
 
-                <div className="features">
-                    <div className="feature-card">
-                        <i className="fas fa-camera feature-icon"></i>
+                <div className={styles.features}>
+                    <div className={styles["feature-card"]}>
+                        <i className={`fas fa-camera ${styles["feature-icon"]}`}></i>
                         <p>Image Analysis</p>
                     </div>
-                    <div className="feature-card">
-                        <i className="fas fa-shield-alt feature-icon"></i>
+                    <div className={styles["feature-card"]}>
+                        <i className={`fas fa-shield-alt ${styles["feature-icon"]}`}></i>
                         <p>Spam Detection</p>
                     </div>
                 </div>
 
-                <div className="footer">
+                <div className={styles.footer}>
                     <p>
                         Already have an account?{" "}
-                        <a href="/Login" className="signin-link">
+                        <a href="/Login" className={styles["signin-link"]}>
                             Sign In
                         </a>
                     </p>
