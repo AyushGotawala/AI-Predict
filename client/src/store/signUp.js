@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 
 const API_URL = `${import.meta.env.VITE_API_URL}/auth/SignUp`;
-console.log(API_URL);
 
 export const signupUser = createAsyncThunk(
     'signup/signupUser',

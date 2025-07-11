@@ -620,3 +620,14 @@ body {
   border-color: #f87171;
   background: rgba(252, 165, 165, 0.08);
 }
+
+.error-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.error-text-line {
+  color: white;
+  font-size: 0.9rem;
+}

@@ -4,15 +4,21 @@ import axios from "axios";
 const API_URL = `${import.meta.env.VITE_API_URL}/auth/Login`;
 
 export const loginUser = createAsyncThunk(
-  "login/loignUser",
+  "login/loginUser",
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(API_URL, userData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Login Failed...."
-      );
+      const apiData = error.response?.data;
+
+      if (apiData?.errors) {
+        return rejectWithValue(apiData.errors);
+      } else if (apiData?.message) {
+        return rejectWithValue([{ message: apiData.message }]);
+      } else {
+        return rejectWithValue([{ message: "Login Failed. Please try again." }]);
+      }
     }
   }
 );
