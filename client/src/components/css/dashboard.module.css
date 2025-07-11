@@ -14,6 +14,51 @@ body {
 .dashboard-container {
   display: flex;
   min-height: 100vh;
+  width: 100vw;
+}
+
+/* Hamburger menu for mobile */
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 18px;
+  right: 18px;     /* Add this line */
+  z-index: 1300;
+  width: 38px;
+  height: 38px;
+  background: #fff;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 3px;
+  background: #667eea;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* Overlay for mobile sidebar */
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 1200;
+  display: none;
+}
+
+/* Show overlay only when sidebar is open */
+@media (max-width: 900px) {
+  .sidebar.open ~ .overlay {
+    display: block;
+  }
 }
 
 /* Sidebar */
@@ -23,7 +68,11 @@ body {
   backdrop-filter: blur(10px);
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
   padding: 40px 24px 30px 24px;
-  transition: all 0.3s ease;
+  transition: left 0.3s, box-shadow 0.3s, width 0.3s, padding 0.3s;
+  position: relative;
+  z-index: 1202;
+  display: flex;
+  flex-direction: column;
 }
 
 .logo-section {
@@ -71,6 +120,7 @@ body {
 
 .nav-menu {
   list-style: none;
+  padding: 0;
 }
 
 .nav-item {
@@ -97,6 +147,10 @@ body {
 .nav-icon {
   margin-right: 12px;
   font-size: 18px;
+}
+
+.nav-label {
+  display: inline;
 }
 
 /* Main Content */
@@ -423,73 +477,78 @@ body {
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
-/* Responsive Design */
+/* --- Responsive Sidebar & Dashboard --- */
 @media (max-width: 900px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px;
+    width: 220px;
+    height: 100vh;
+    z-index: 1202;
+    box-shadow: 2px 0 20px rgba(0,0,0,0.15);
+    background: #fff;
+    padding: 30px 12px 20px 12px;
+    transition: left 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar.open {
+    left: 0;
+  }
+  .main-content {
+    padding: 24px 8px;
+    margin-left: 0 !important;
+    min-width: 0;
+    max-width: 100vw;
+  }
+  .hamburger {
+    display: flex;
+  }
+  .overlay {
+    display: block;
+  }
+  /* Make content-grid stack vertically on small screens */
   .content-grid {
     grid-template-columns: 1fr;
     gap: 24px;
   }
-  .main-content {
-    padding: 24px 8px;
-  }
-  .sidebar {
-    width: 100px;
-    padding: 24px 8px;
-  }
 }
 
-@media (max-width: 768px) {
-  .sidebar {
-    width: 70px;
-    padding: 30px 10px;
-  }
-
-  .nav-link span {
-    display: none;
-  }
-
-  .brand-name, .brand-subtitle {
-    display: none;
-  }
-
-  .content-grid {
-    grid-template-columns: 1fr;
-  }
-
+/* Stack stat cards vertically on small screens */
+@media (max-width: 700px) {
   .stats-grid {
     grid-template-columns: 1fr;
+    gap: 18px;
   }
-
-  .header {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
+  .stat-card {
+    padding: 18px;
   }
-}
-
-/* Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  /* Make chart container height smaller on mobile */
+  .chart-container {
+    height: 180px;
   }
 }
 
-.fade-in {
-  animation: fadeInUp 0.6s ease;
+/* Reduce main-content padding on small screens */
+@media (max-width: 600px) {
+  .main-content {
+    padding: 6px 1vw;
+  }
+  /* Make dashboard-container scrollable on mobile */
+  .dashboard-container {
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+  }
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+/* Sidebar overlay fix for all mobile widths */
+@media (max-width: 900px) {
+  .sidebar.open ~ .overlay {
+    display: block;
   }
 }

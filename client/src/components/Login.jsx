@@ -61,7 +61,7 @@ const Login = () => {
         try {
             const resultAction = await dispatch(loginUser(formData));
             if (loginUser.fulfilled.match(resultAction)) {
-                navigate("/Dashboard");
+                navigate("/dashboard");
             }
         } catch (error) {
             console.error("Login error:", error);
@@ -104,7 +104,7 @@ const Login = () => {
                 <form className={styles["form-container"]} onSubmit={handleSubmit}>
                     <div className={styles["input-group"]}>
                         <div className={styles["input-container"]}>
-                            <i className={`fas fa-envelope ${styles["input-icon"]}`}></i>
+                            <i className={`fas fa-user ${styles["input-icon"]}`}></i>
                             <input
                                 type="text"
                                 className={`${styles["form-input"]} ${fieldErrors.username ? styles.error : ""}`}

@@ -1,12 +1,16 @@
+import React, { useState } from "react";
 import styles from './css/dashboard.module.css';
 import SideBar from "./SideBar";
-import { Main } from "./Dashboard/main";
+import { Outlet } from 'react-router-dom';
 
 const Dashboard = () => {
+  const [activeNav, setActiveNav] = useState("Dashboard");
   return (
     <div className={styles["dashboard-container"]}>
-      <SideBar />
-      <Main />
+      <SideBar activeNav={activeNav} setActiveNav={setActiveNav} />
+      <main className={styles["main-content"]}>
+        <Outlet />
+      </main>
     </div>
   );
 };

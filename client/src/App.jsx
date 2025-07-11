@@ -4,6 +4,9 @@ import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import Dashboard from "./components/dashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import { Main } from "./components/Dashboard/main";
+import ImageAnalysis from "./components/Image";
+import EmailAnalysis from "./components/Email";
 
 function App() {
   return (
@@ -14,8 +17,11 @@ function App() {
         <Route path="/SignUp" element={<SignUp />} />
         {/* Protected Routes */}
         <Route element={<PrivateRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          {/* Add more protected routes here */}
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route path="" element={<Main />} />
+            <Route path="image-analysis" element={<ImageAnalysis />} />
+            <Route path="email-analysis" element={<EmailAnalysis />} />
+          </Route>
         </Route>
 
         {/* Default redirect */}
