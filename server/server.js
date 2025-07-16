@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const authRouter = require("./routes/authRoute");
 const mongoose = require("mongoose");
+const emailSpamRoute = require("./routes/emailSpamRoute");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
+app.use("/api", emailSpamRoute);
 
 mongoose
   .connect(process.env.MONGO_URI)
