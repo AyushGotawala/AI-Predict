@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { emailSpam, clearResult } from "../store/email";
 import styles from "./css/emailAnalysis.module.css";
+import { useEffect } from "react";
 
 const EmailAnalysis = () => {
   const [emailContent, setEmailContent] = useState("");
@@ -13,6 +14,13 @@ const EmailAnalysis = () => {
     dispatch(clearResult());
     dispatch(emailSpam(emailContent));
   };
+
+  useEffect(() => {
+    if(emailContent === ''){
+      dispatch(clearResult());
+    }
+  },[emailContent,dispatch])
+
 
   return (
     <div className={styles["email-analysis-container"]}>
