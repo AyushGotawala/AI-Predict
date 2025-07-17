@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./css/emailHistory.module.css";
-import { spamEmailHistory ,deleteEmailHistory } from "../store/emailHistory";
+import { spamEmailHistory, deleteEmailHistory } from "../store/emailHistory";
 
 const EmailHistory = () => {
   const dispatch = useDispatch();
@@ -19,9 +19,8 @@ const EmailHistory = () => {
   const historyData = data || [];
 
   const filteredHistory = historyData.filter((item) => {
-    const matchesSearch = item.Content.toLowerCase().includes(
-      searchTerm.toLowerCase()
-    );
+    if (!item) return false; // Skip null or undefined items
+    const matchesSearch = item.Content.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filterType === "all" || item.result === filterType;
     return matchesSearch && matchesFilter;
   });
@@ -32,27 +31,20 @@ const EmailHistory = () => {
     }
   };
 
-  const totalPages = Math.ceil(filteredHistory.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredHistory.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedHistory = filteredHistory.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const paginatedHistory = filteredHistory.slice(startIndex, startIndex + itemsPerPage);
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+    const date = new Date(dateString);
+    if (isNaN(date)) return "Invalid Date";
+    return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
-  };
-
-  const truncateContent = (content, maxLength = 100) => {
-    return content.length > maxLength
-      ? content.substring(0, maxLength) + "..."
-      : content;
   };
 
   if (loading) {
@@ -147,7 +139,7 @@ const EmailHistory = () => {
               </div>
 
               <div className={styles["item-content"]}>
-                <p>{truncateContent(item.Content)}</p>
+                <p>{item.Content}</p>
               </div>
 
               <div className={styles["item-actions"]}>

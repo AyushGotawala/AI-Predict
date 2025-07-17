@@ -60,9 +60,9 @@ const spamEmail = async (req, res, next) => {
 const getEmailAnalysisData = async (req, res, next) => {
     try {
         const userId = req.user.userId;
-
+    
         const userObjectID = new mongoose.Types.ObjectId(userId);
-        const predictions = await Analysis.find({ userId: userObjectID }).sort({ createdAt: -1 });
+        const predictions = await Analysis.find({ userId: userObjectID , TypeOfAnalysis: 'email' }).sort({ createdAt: -1 });
 
         res.status(200).json({
             success: true,
@@ -70,6 +70,7 @@ const getEmailAnalysisData = async (req, res, next) => {
             data: predictions
         });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             success: false,
             message: 'Failed to fetch user prediction history',
@@ -98,9 +99,32 @@ const deleteEmailHistory = async(req,res,next) =>{
     }
 }
 
+const getFiveAnayysis = async(req,res,next) =>{
+    try {
+        const userId = req.user.userId;
+
+        const userObjectID = new mongoose.Types.ObjectId(userId);
+        const predictions = await Analysis.find({ userId: userObjectID }).sort({ createdAt: -1 }).limit(5);
+
+        res.status(200).json({
+            success: true,
+            count: predictions.length,
+            data: predictions
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to fetch user prediction history',
+            error: error.message,
+        });
+    }
+}
+
 
 module.exports = { 
     spamEmail, 
     getEmailAnalysisData,
-    deleteEmailHistory
+    deleteEmailHistory,
+    getFiveAnayysis,
+    getFiveAnayysis
 };

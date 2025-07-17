@@ -1,17 +1,30 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "../css/dashboard.module.css";
-import {useSelector} from 'react-redux';
-
-const initialPredictions = [];
+import {useDispatch,useSelector} from 'react-redux';
+import { fiveAnalysisHistory } from "../../store/emailHistory";
 
 export const Main = () => {
   const [currentDate, setCurrentDate] = useState("");
-  const [predictions, setPredictions] = useState(initialPredictions);
+  const [predictions, setPredictions] = useState([]);
   const [totalPredictions, setTotalPredictions] = useState(2847);
   const [notification, setNotification] = useState(null);
   const notificationTimeout = useRef(null);
   const user = useSelector(store => store.login.user);
-  const emailCount = useSelector(store => store.emailHistory.count);
+  const {emailCount,fiveData,loading,error} = useSelector(store => store.emailHistory);
+  const ImageCount = 0;
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    setTotalPredictions(emailCount + ImageCount);
+  }, [emailCount, ImageCount]);
+
+  useEffect(() => {
+    dispatch(fiveAnalysisHistory());
+  }, [dispatch]); // Remove fiveData from dependency
+
+  useEffect(() => {
+    setPredictions(fiveData || []); // Add null check
+  }, [fiveData]);
 
   useEffect(() => {
     const now = new Date();
@@ -97,6 +110,38 @@ export const Main = () => {
       color: "#fff",
     };
   };
+
+  const formatResult = (result) => {
+    if (!result) return "Unknown";
+    if (result === "Not Spam") return "Safe";
+    if (result === "Spam") return "Spam";
+    return result.charAt(0).toUpperCase() + result.slice(1);
+  };
+
+  const getResultIcon = (result) => {
+    if (!result) return "❓";
+    if (result === "Not Spam") return "✅";
+    if (result === "Spam") return "🚫";
+    return "📊";
+  };
+
+  const getAnalysisTypeIcon = (type) => {
+    if (type === "email") return "📧";
+    if (type === "image") return "🖼️";
+    return "📊";
+  };
+
+  const formatTimeAgo = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInMinutes = Math.floor((now - date) / (1000 * 60));
+    
+    if (diffInMinutes < 1) return "Just now";
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
+    return `${Math.floor(diffInMinutes / 1440)}d ago`;
+  };
+
   return (
     <main className={styles["main-content"]}>
       <header className={`${styles.header} ${styles["fade-in"]}`}>
@@ -150,7 +195,7 @@ export const Main = () => {
         </div>
         <div className={styles["stat-card"]}>
           <div className={styles["stat-icon"]}>🖼️</div>
-          <div className={styles["stat-value"]}>1,293</div>
+          <div className={styles["stat-value"]}>{ImageCount.toLocaleString()}</div>
           <div className={styles["stat-label"]}>Images Analyzed</div>
           {/* <div className={`${styles["stat-change"]} ${styles.positive}`}>
             +8% from last week
@@ -178,24 +223,44 @@ export const Main = () => {
         <div className={`${styles["content-card"]} ${styles["fade-in"]}`}>
           <div className={styles["card-header"]}>
             <h2 className={styles["card-title"]}>Recent Predictions</h2>
-            <button className={styles["card-action"]}>View All</button>
+            {/* <button className={styles["card-action"]}>View All</button> */}
           </div>
           <ul className={styles["prediction-list"]}>
             {predictions.map((pred, idx) => (
-              <li className={styles["prediction-item"]} key={idx}>
+              <li className={styles["prediction-item"]} key={pred._id || idx}>
                 <div className={styles["prediction-info"]}>
-                  <div className={styles["prediction-type"]}>{pred.type}</div>
-                  <div className={styles["prediction-time"]}>{pred.time}</div>
+                  <div className={styles["prediction-type"]}>
+                    <span className={styles["analysis-icon"]}>
+                      {getAnalysisTypeIcon(pred.TypeOfAnalysis)}
+                    </span>
+                    <span className={styles["analysis-text"]}>
+                      {pred.TypeOfAnalysis === "email" ? "Email Analysis" : "Content Analysis"}
+                    </span>
+                  </div>
+                  <div className={styles["prediction-time"]}>
+                    {formatTimeAgo(pred.createdAt)}
+                  </div>
                 </div>
-                <span
-                  className={`${styles["prediction-status"]} ${
-                    styles[`status-${pred.status}`]
-                  }`}
-                >
-                  {pred.status.charAt(0).toUpperCase() + pred.status.slice(1)}
-                </span>
+                <div className={styles["prediction-result"]}>
+                  <span className={styles["result-icon"]}>
+                    {getResultIcon(pred.result)}
+                  </span>
+                  <span
+                    className={`${styles["prediction-status"]} ${
+                      styles[`status-${pred.result === "Not Spam" ? "safe" : "spam"}`]
+                    }`}
+                  >
+                    {formatResult(pred.result)}
+                  </span>
+                </div>
               </li>
             ))}
+            {predictions.length === 0 && (
+              <li className={styles["empty-predictions"]}>
+                <div className={styles["empty-icon"]}>📊</div>
+                <div className={styles["empty-text"]}>No recent predictions</div>
+              </li>
+            )}
           </ul>
         </div>
 
