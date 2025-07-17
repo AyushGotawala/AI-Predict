@@ -2,17 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import styles from "../css/dashboard.module.css";
 import {useSelector} from 'react-redux';
 
-const initialPredictions = [
-  { type: "🖼️ Image Content Analysis", time: "2 minutes ago", status: "safe" },
-  { type: "📧 Spam Email Detection", time: "5 minutes ago", status: "spam" },
-  {
-    type: "🖼️ Image Content Analysis",
-    time: "12 minutes ago",
-    status: "inappropriate",
-  },
-  { type: "📧 Spam Email Detection", time: "18 minutes ago", status: "safe" },
-  { type: "🖼️ Image Content Analysis", time: "25 minutes ago", status: "safe" },
-];
+const initialPredictions = [];
 
 export const Main = () => {
   const [currentDate, setCurrentDate] = useState("");
@@ -21,6 +11,7 @@ export const Main = () => {
   const [notification, setNotification] = useState(null);
   const notificationTimeout = useRef(null);
   const user = useSelector(store => store.login.user);
+  const emailCount = useSelector(store => store.emailHistory.count);
 
   useEffect(() => {
     const now = new Date();
@@ -153,34 +144,34 @@ export const Main = () => {
             {totalPredictions.toLocaleString()}
           </div>
           <div className={styles["stat-label"]}>Total Predictions</div>
-          <div className={`${styles["stat-change"]} ${styles.positive}`}>
+          {/* <div className={`${styles["stat-change"]} ${styles.positive}`}>
             +12% from last week
-          </div>
+          </div> */}
         </div>
         <div className={styles["stat-card"]}>
           <div className={styles["stat-icon"]}>🖼️</div>
           <div className={styles["stat-value"]}>1,293</div>
           <div className={styles["stat-label"]}>Images Analyzed</div>
-          <div className={`${styles["stat-change"]} ${styles.positive}`}>
+          {/* <div className={`${styles["stat-change"]} ${styles.positive}`}>
             +8% from last week
-          </div>
+          </div> */}
         </div>
         <div className={styles["stat-card"]}>
           <div className={styles["stat-icon"]}>📧</div>
-          <div className={styles["stat-value"]}>1,554</div>
+          <div className={styles["stat-value"]}>{emailCount}</div>
           <div className={styles["stat-label"]}>Emails Scanned</div>
-          <div className={`${styles["stat-change"]} ${styles.positive}`}>
+          {/* <div className={`${styles["stat-change"]} ${styles.positive}`}>
             +15% from last week
-          </div>
+          </div> */}
         </div>
-        <div className={styles["stat-card"]}>
+        {/* <div className={styles["stat-card"]}>
           <div className={styles["stat-icon"]}>🛡️</div>
           <div className={styles["stat-value"]}>98.7%</div>
           <div className={styles["stat-label"]}>Accuracy Rate</div>
           <div className={`${styles["stat-change"]} ${styles.positive}`}>
             +0.3% from last week
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className={styles["content-grid"]}>
@@ -208,7 +199,7 @@ export const Main = () => {
           </ul>
         </div>
 
-        <div className={`${styles["content-card"]} ${styles["fade-in"]}`}>
+        {/* <div className={`${styles["content-card"]} ${styles["fade-in"]}`}>
           <div className={styles["card-header"]}>
             <h2 className={styles["card-title"]}>Quick Actions</h2>
           </div>
@@ -232,10 +223,10 @@ export const Main = () => {
             <div className={styles["upload-text"]}>Check Email for Spam</div>
             <button className={styles["upload-btn"]}>Paste Email</button>
           </div>
-        </div>
+        </div> */}
       </div>
 
-      <div className={`${styles["content-card"]} ${styles["fade-in"]}`}>
+      {/* <div className={`${styles["content-card"]} ${styles["fade-in"]}`}>
         <div className={styles["card-header"]}>
           <h2 className={styles["card-title"]}>Prediction Analytics</h2>
           <button className={styles["card-action"]}>Export Data</button>
@@ -245,7 +236,7 @@ export const Main = () => {
             📈 Analytics Chart - Real-time data visualization
           </div>
         </div>
-      </div>
+      </div> */}
     </main>
   );
 };

@@ -7,6 +7,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import { Main } from "./components/Dashboard/main";
 import ImageAnalysis from "./components/Image";
 import EmailAnalysis from "./components/Email";
+import EmailHistory from "./components/emailHistory";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="" element={<Main />} />
             <Route path="image-analysis" element={<ImageAnalysis />} />
             <Route path="email-analysis" element={<EmailAnalysis />} />
+            <Route path="email-history" element={<EmailHistory />} />
           </Route>
         </Route>
 

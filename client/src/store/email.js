@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = `${import.meta.env.VITE_API_URL}/predictEmail`;
+const API_URL = `${import.meta.env.VITE_API_URL}`;
 
 export const emailSpam = createAsyncThunk(
   "email/spamEmail",
@@ -10,7 +10,7 @@ export const emailSpam = createAsyncThunk(
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        API_URL,
+        `${API_URL}/predictEmail`,
         { text: emailContent },
         {
           headers: {
