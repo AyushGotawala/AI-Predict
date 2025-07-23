@@ -9,7 +9,7 @@ const navItems = [
   { icon: "📊", label: "Dashboard", path: "/dashboard" },
   { icon: "🖼️", label: "Image Analysis", path: "/dashboard/image-analysis" },
   { icon: "📧", label: "Email Scanner", path: "/dashboard/email-analysis" },
-  { icon: "📧", label: "Email History", path: "/dashboard/email-history" },
+  { icon: "📨🕓", label: "Email History", path: "/dashboard/email-history" },
   { icon: "", label: "Logout" },
 ];
 
